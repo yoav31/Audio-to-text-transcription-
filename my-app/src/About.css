@@ -1,0 +1,16 @@
+.faq-text {
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: left;
+}
+.faq-text h2 {
+    margin-top: 24px;
+    margin-bottom: 4px; /* מקטין רווח מתחת לכותרת */
+    color: #28164f;
+  }
+  
+  .faq-text h4 {
+    margin-top: 0; /* מבטל רווח מיותר מלמעלה */
+    margin-bottom: 12px;
+    font-weight: normal;
+  }

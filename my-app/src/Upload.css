@@ -1,0 +1,18 @@
+.sce-logo {
+    opacity: 0.5;
+    position: absolute;
+    top: 55px;
+    width: 150px; /* רוחב מותאם */
+    height: auto; /* גובה יחסי */
+    display: block; /* מונע רווחים לא רצויים */
+    margin: 15px; /* ממרכז את התמונה */  
+}
+
+.museum-logo2 {
+    opacity: 0.5;
+    position: absolute;
+    top: 65px;
+    right: 15px; /* מעביר את התמונה לצד ימין */
+    width: 180px; /* רוחב מותאם */
+    height: auto; /* גובה יחסי */
+}
