@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Button, Typography, Box } from '@mui/material';
+import { jsPDF } from "jspdf";
+import { FormControl, InputLabel, Select, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import FlagIcon from '@mui/icons-material/Flag';
+
+
 
 function Upload() {
   const [file, setFile] = useState(null);
@@ -55,22 +59,40 @@ function Upload() {
     link.href = url;
     link.click();
   };
-
+  const handleDownloadPdf = () => {
+    const doc = new jsPDF();
+    const lines = doc.splitTextToSize(transcription, 180); // שבירת שורות כדי לא לחתוך טקסט
+    doc.text(lines, 10, 10); // x=10, y=10
+    doc.save("transcription.pdf");
+  };
+  const handleDownloadWord = () => {
+    const blob = new Blob([transcription], { type: "application/msword" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.download = "transcription.doc";
+    link.href = url;
+    link.click();
+  };
   return (
-    <div style={{ paddingLeft: '20px' }}>
-      <img src="/photos/sce_logo.webp" alt="sce logo" className="sce-logo" />
-      <img src="/photos/museum-logo2.jpg" alt="museum logo" className="museum-logo2" />
-      <h1 id="main_title">Upload Your File</h1>
+    <div>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '8px' }}>
+        <img src="/photos/sce_logo.webp" alt="sce logo" style={{ opacity: '0.5', objectFit: 'contain',height: '60px',width: '120px' }} />
+        <img src="/photos/museum-logo.jpg" alt="museum logo" style={{ opacity: '0.5',height: '60px', objectFit: 'contain',width: '150px' }} />
+        </div>
+        <Typography variant='h4' style={{ alignSelf: 'center' }}>Upload Your File</Typography>
+
+      </div>
       <p id="main_text">Upload your audio or video file to get a transcription and summary.</p>
 
-      <label htmlFor="language">Choose Language for Transcription and Summary:</label>
+      <label htmlFor="language">Choose Language for Transcription and Summary:<tab> </tab></label>
       <select id="language" name="language">
         <option value="en">English</option>
         <option value="he">Hebrew</option>
         <option value="ru">Russian</option>
       </select>
 
-      <Typography variant='h4'>Upload your file here:</Typography>
+      <Typography variant='h6'>Upload your file here:</Typography>
 
       <input
         type="file"
@@ -83,15 +105,20 @@ function Upload() {
       <button id="clear-upload" type="button" onClick={handleClearFile}>Clear File</button>
       <button id="upload-button" onClick={handleUpload}>Upload</button>
 
-      {file && (
-        <p>Selected file: {file.name}</p>
-      )}
+      {file && (<p>Selected file: {file.name}</p>)}
       <Box style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
         <Typography variant='p'>Click the button to upload your file.</Typography>
         <Typography variant='p'>The file will be sent to the server for processing.</Typography>
         <Typography variant='p'>Please wait for the processing to complete.</Typography>
       </Box>
-      <Button variant="contained" onClick={handleDownloadTxt}>Download as .txt</Button>
+      <br></br>
+      <br></br>
+      <div style={{ display: "flex", gap: "16px" }}>
+        <Button variant="contained" onClick={handleDownloadTxt}>Download as .txt</Button>
+        <Button variant="contained" onClick={handleDownloadPdf}>Download as .pdf</Button>
+        <Button variant="contained" onClick={handleDownloadWord}>Download as .doc</Button></div>
+    
+
     </div>
   );
 }

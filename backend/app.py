@@ -7,6 +7,7 @@ from speech import transcribe_audio
 import os
 
 
+
 app = Flask(__name__)
 CORS(app)
 

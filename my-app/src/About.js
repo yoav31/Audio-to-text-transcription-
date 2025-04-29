@@ -1,13 +1,17 @@
 import React from 'react';
 import './About.css'; // ייבוא קובץ CSS לדף אודות
-
+import { Typography } from '@mui/material'; // ייבוא רכיבי Typography מ-MUI
 function About() {
     return (
       <div>
-        <img src="/photos/sce_logo.webp" alt="sce logo" class="sce-logo"/>
-        <img src="/photos/museum-logo2.jpg" alt="museum-logo2" class="museum-logo2"/>
-
-        <h1 id="main_title">About the Website</h1>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '8px' }}>
+          <img src="/photos/sce_logo.webp" alt="sce logo" className="sce_logo" />
+          <img src="/photos/museum_logo.png" alt="museum logo" className="museum_logo" />
+        </div>
+          <Typography variant='h4' style={{alignSelf: 'center'}}>About the website</Typography>
+        
+      </div>
         <div className="faq-text">
         <p>Welcome to the Digital Testimonies of World War II Soldiers website.<br/> Our platform provides easy and up-to-date access to live testimonies
          from soldiers on various fronts, focusing on personal experiences, major battles, and the difficult situations faced during the war. Our 

@@ -2,9 +2,9 @@
 import './App.css';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import Home from './Home';  // דף הנחיתה
-import About from './About';  // דף אודות
-import FAC from './FAC';  // דף צורר שאלות
+import Home from './Home';
+import About from './About';  
+import FAQ from './FAQ'; 
 import Upload from './Upload';  // דף העלאת קובץ
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
             <Route path="/" element={<Home />} />  {/* דף הנחיתה */}
             <Route path="/About" element={<About />} />
             <Route path="/Upload" element={<Upload />} />
-            <Route path="/FAC" element={<FAC />} />  {/* דף צור קשר */}
+            <Route path="/FAC" element={<FAQ />} />  {/* דף צור קשר */}
           </Routes>
         </div>
       </Router>

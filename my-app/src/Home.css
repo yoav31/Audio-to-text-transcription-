@@ -1,32 +1,10 @@
-body{
-    background-image: url('/public/photos/background-image.jpg');
-    background-size: cover;
-    background-blend-mode: overlay;
-    background-color: rgba(255, 255, 255, 0.5); /* לבן עם שקיפות */
-}
+
 #main_title {
         
         text-align: center; /* ממרכז את הטקסט */
         font-family: Arial, sans-serif;  
 }
 
-.sce-logo {
-    opacity: 0.5;
-    position: absolute;
-    top: 55px;
-    width: 150px; /* רוחב מותאם */
-    height: auto; /* גובה יחסי */
-    display: block; /* מונע רווחים לא רצויים */
-    margin: 15px; /* ממרכז את התמונה */  
-}
-.museum-logo {
-    opacity: 0.5;
-    position: absolute;
-    top: 60px;
-    right: 15px; /* מעביר את התמונה לצד ימין */
-    width: 100px; /* רוחב מותאם */
-    height: auto; /* גובה יחסי */
-}
 #sub_title {
     text-align: center; /* ממרכז את הטקסט */
     /* font-family: Georgia, sans-serif;   */
@@ -48,3 +26,20 @@ body{
     background-color: #0056b3;
 }
 
+.sce_logo {
+    opacity: 0.5;
+    width: 100px;
+    height: 50px; 
+    /* position: absolute;
+    top: 55px;
+    display: block; 
+    margin: 15px;   */
+}
+
+.museum_logo {
+    opacity: 0.5;
+    width: 80px; 
+    height: 80px;
+    /* position: absolute;
+    top: 65px; */
+}

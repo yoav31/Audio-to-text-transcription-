@@ -1,7 +1,8 @@
 from faster_whisper import WhisperModel
 
+
 print("Loading Whisper Model...")
-model = WhisperModel("medium", device="cpu", compute_type="int8")
+model = WhisperModel("medium", device="CPU", compute_type="int8")
 print("Model Loaded!")
 
 def transcribe_audio(audio_path, language):
