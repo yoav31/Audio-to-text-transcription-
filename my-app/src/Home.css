@@ -9,21 +9,9 @@
     text-align: center; /* ממרכז את הטקסט */
     /* font-family: Georgia, sans-serif;   */
 }
-#upload-button {
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #28164f;
-    color: rgb(247, 197, 17);
-    border: none;
-    cursor: pointer;
-    margin-top: 20px;
-    position: absolute;
-    top: 70%;
-    left: 43%;
-}
+
 #upload-button:hover {
-    background-color: #0056b3;
+    background-color: #ef4c4c;
 }
 
 .sce_logo {

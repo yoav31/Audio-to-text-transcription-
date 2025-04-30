@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from moviepy import VideoFileClip
 from pydub import AudioSegment
 from speech import transcribe_audio
+from speaker_diarization import diarize
 import os
 
 
