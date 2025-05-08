@@ -60,7 +60,7 @@ ul.nav-links li {
 
 ul.nav-links li a {
   text-decoration: none;
-  color: rgb(57, 75, 191);
+  color: rgb(51, 71, 198);
   font-weight: bold;
 }
 
@@ -80,7 +80,7 @@ input[type="text"] {
 
 #Search_button {
   padding: 8px 12px;
-  background-color: #007bff;
+  background-color: #0852ef;
   color: white;
   border: none;
   border-radius: 5px;

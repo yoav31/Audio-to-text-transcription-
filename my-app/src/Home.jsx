@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Typography,Button, Box } from '@mui/material';
 function Home() {
   return (
-    <div>
+    <div  style={{ backgroundColor: '#fff8e1', minHeight: '100vh', padding: '20px' }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '8px' }}>
         <img src="/photos/sce_logo.webp" alt="sce logo" className="sce_logo" />

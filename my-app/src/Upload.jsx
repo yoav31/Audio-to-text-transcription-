@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Typography, Box } from '@mui/material';
-import pdfMake from "pdfmake/build/pdfmake";
 import { BsFiletypeTxt } from 'react-icons/bs';
 import { FaRegFilePdf } from "react-icons/fa6";
 import { FaRegFileWord } from "react-icons/fa";
@@ -8,12 +7,17 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import Input from '@mui/material/Input';   
+import Input from '@mui/material/Input'; 
+import pdfMake from "pdfmake/build/pdfmake";
+import { Link } from 'react-router-dom';
+import pdfFonts from "pdfmake/build/vfs_fonts";
+
 
 
 function Upload() {
   const [file, setFile] = useState(null);
   const [transcription, setTranscription] = useState("");
+  const [summary, setSummary] = useState(""); // State to store the summary
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -29,12 +33,11 @@ function Upload() {
       alert("Please select a file first.");
       return;
     }
-    setShowDownloadButtons(true); 
+    alert("Please wait for the processing to complete."); 
     const formData = new FormData();
     formData.append("file", file);
-    const selectedLanguage = document.getElementById("language").value;
-    formData.append("language", selectedLanguage);
-
+    formData.append("language_audio", language_audio);
+    formData.append("language_text", language_text);
 
     try {
       const response = await fetch("http://localhost:5000/upload", {
@@ -47,7 +50,8 @@ function Upload() {
       if (response.ok) {
         const data = await response.json();
         setTranscription(data.transcription);
-        alert("File uploaded and transcribed successfully!");
+        setSummary(data.summary); // Set the summary from the response        
+        setShowDownloadButtons(true);
       } else {
         alert("Failed to upload file.");
       }
@@ -68,13 +72,13 @@ function Upload() {
   const handle_Download_Transcription_Pdf = () => {
     const docDefinition = {
       content: [
-        { text: transcription, font: 'NotoSans' }
+        { text: transcription, alignment: 'right' } // תומך בעברית, רוסית ואנגלית
       ],
       defaultStyle: {
-        font: 'NotoSans'
+        font: 'Roboto'
       }
     };
-
+  
     pdfMake.createPdf(docDefinition).download("transcription.pdf");
   };
   const handle_Download_Transcription_Word = () => {
@@ -86,11 +90,40 @@ function Upload() {
     link.click();
   };
 
-  const [language, set] = React.useState('');
+  const [language_audio, setLanguage] = React.useState('');
 
   const handleChange = (event) => {
-    set(event.target.value);
+    setLanguage(event.target.value);
   };
+
+  const handle_Download_Summary_Txt = () => {
+    const blob = new Blob([summary], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.download = "summary.txt";
+    link.href = url;
+    link.click();
+}
+const handle_Download_Summary_Pdf = () => {
+  const docDefinition = {
+    content: [
+      { text: summary, alignment: 'right' }
+    ],
+    defaultStyle: {
+      font: 'Roboto'
+    }
+  };
+
+  pdfMake.createPdf(docDefinition).download("summary.pdf");
+};
+  const handle_Download_Summary_Word = () => {
+    const blob = new Blob([summary], { type: "application/msword" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.download = "summary.doc";
+    link.href = url;
+    link.click();
+  }
 
   const buttonStyle = {
     backgroundColor: '#1032c7',
@@ -104,7 +137,7 @@ function Upload() {
   };
 
   return (
-    <div>
+    <div  style={{ backgroundColor: '#fff8e1', minHeight: '100vh', padding: '20px' }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '8px' }}>
           <img src="/photos/sce_logo.webp" alt="sce logo" style={{ opacity: '0.5', objectFit: 'contain', height: '60px', width: '120px' }} />
@@ -118,18 +151,21 @@ function Upload() {
         <Box style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '8px' }}>
         <Typography variant='p'>Upload your audio or video file to get a transcription and summary.</Typography>
         <Typography variant='p'>Supported formats: .mp3, .wav, .flac, .ogg, .m4a, .mp4, .avi, .mov, .mkv, .webm</Typography>
-        <Typography variant='p'>Choose Language for Transcription and Summary:<tab> </tab></Typography>
+        <Typography variant='p'>Choose Language of the audio/video :<tab> </tab></Typography>
         </Box>
       
       <FormControl sx={{ width: 110}} fullWidth size="small">
         <InputLabel id="demo-simple-select-label" >language</InputLabel>
-        <Select
-          // labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={language}
-          label="language"
-          onChange={handleChange}
-        >
+        <Select id="demo-simple-select" value={language_audio} label="language_audio" onChange={handleChange}>
+          <MenuItem value={"en"}>English</MenuItem>
+          <MenuItem value={"he"}>Hebrew</MenuItem>
+          <MenuItem value={"ru"}>Russian</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControl sx={{ width: 110}} fullWidth size="small">
+        <InputLabel id="demo-simple-select-label" >language</InputLabel>
+        <Select id="demo-simple-select" value={language_text} label="language_text" onChange={handleChange}>
           <MenuItem value={"en"}>English</MenuItem>
           <MenuItem value={"he"}>Hebrew</MenuItem>
           <MenuItem value={"ru"}>Russian</MenuItem>
@@ -158,22 +194,25 @@ function Upload() {
         <Button className="upload-button" sx={buttonStyle} type='button' onClick={handleUpload}>Upload</Button>
       </Box>
       <br></br>
-      
-      <br></br>
       {showDownloadButtons && (<>
-      <div style={{ display: "flex", gap: "16px", padding: '8px' }}>
+        <Typography variant='h5'>File uploaded successfully! Transcription and summary are ready.</Typography>
+        <br></br>
+        <Box style={{ display: "flex", gap: "16px", padding: '8px' }}>
         <Typography variant='h6'>Transcription:</Typography>
         <Button variant="contained" startIcon={<BsFiletypeTxt />} onClick={handle_Download_Transcription_Txt}>.txt</Button>
         <Button variant="contained" startIcon={< FaRegFilePdf />} onClick={handle_Download_Transcription_Pdf}>.pdf</Button>
-        <Button variant="contained" startIcon={<FaRegFileWord />} onClick={handle_Download_Transcription_Word}>.doc</Button></div>
-      <br></br>
-      <br></br>
-      <div style={{ display: "flex", gap: "16px", padding: '8px' }}>
-        <Typography variant='h6'>Summary:</Typography>
-        <Button variant="contained" startIcon={<BsFiletypeTxt />} onClick={handle_Download_Transcription_Txt}>.txt </Button>
-        <Button variant="contained" startIcon={< FaRegFilePdf />} onClick={handle_Download_Transcription_Pdf}>.pdf</Button>
         <Button variant="contained" startIcon={<FaRegFileWord />} onClick={handle_Download_Transcription_Word}>.doc</Button>
-      </div>
+        </Box>
+      
+      <Box style={{ display: "flex", gap: "16px", padding: '8px' }}>
+        <Typography variant='h6'>Summary:</Typography>
+        <Button variant="contained" startIcon={<BsFiletypeTxt />} onClick={handle_Download_Summary_Txt}>.txt </Button>
+        <Button variant="contained" startIcon={< FaRegFilePdf />} onClick={handle_Download_Summary_Pdf}>.pdf</Button>
+        <Button variant="contained" startIcon={<FaRegFileWord />} onClick={handle_Download_Summary_Word}>.doc</Button>
+      </Box>
+      <Box style={{ display: 'flex', justifyContent: 'center'}}>
+      <Button onClick={() => window.location.reload()} sx={{ backgroundColor: '#1032c7',borderRadius: '12px', color: '#fff','&:hover': {backgroundColor: '#479fde'} }}>another file?</Button>
+      </Box>
       </>)}
       <br></br>
     </div>
