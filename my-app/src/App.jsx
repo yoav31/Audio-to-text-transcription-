@@ -8,6 +8,7 @@ import FAQ from './FAQ';
 import Upload from './Upload';  // דף העלאת קובץ
 
 function App() {
+  
     return (
       <Router>
         <div>
