@@ -17,6 +17,7 @@ pdfMake.fonts = {
 
 
 export const handle_Download_Transcription_Txt = () => {
+    alert(transcription);
     const blob = new Blob([transcription], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -111,3 +112,4 @@ export  const handle_Download_Summary_Word = async () => {
     const blob = await Packer.toBlob(doc);
     saveAs(blob, "summarization.docx");
   };
+
