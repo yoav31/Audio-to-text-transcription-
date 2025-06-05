@@ -75,5 +75,4 @@ export const summarize = async (file, language_summary, setLoadingSummary, Set_S
     alert("Error during summary: " + error);
     setLoadingSummary(false);
   }
-  alert(summarization);
 };
