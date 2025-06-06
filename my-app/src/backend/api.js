@@ -1,10 +1,9 @@
 
 
-export let transcription = "";
-export let summarization = "";
 
+export let results= [];
 
-export const handleUpload = async (file, language_input, setLoading, Set_Show_Language_Buttons) => {
+export const handleUpload = async (file, language_input, setLoading,Set_Show_Language_Transcription_Button, Set_Show_Language_Summary_Button) => {
   if (!file) {
     alert("Please select a file first.");
     return;
@@ -24,7 +23,8 @@ export const handleUpload = async (file, language_input, setLoading, Set_Show_La
     const data = await response.json();
         alert(data.message);
         setLoading(false);
-        Set_Show_Language_Buttons(true);
+        Set_Show_Language_Transcription_Button(true);
+        Set_Show_Language_Summary_Button(true);
   } catch (error) {
     alert("Error uploading file." + error);
     setLoading(false);
@@ -32,10 +32,6 @@ export const handleUpload = async (file, language_input, setLoading, Set_Show_La
 };
 
 export const transcribe = async (file, language_transcription, setLoadingTranscription, Set_Show_Download_Transcription_Buttons) => {
-  if (!file || !language_transcription) {
-    alert("Missing file or target language.");
-    return;
-  }
 
   setLoadingTranscription(true);
   const baseFileName = file.name.substring(0, file.name.lastIndexOf('.'));
@@ -46,9 +42,9 @@ export const transcribe = async (file, language_transcription, setLoadingTranscr
     );
 
     const data = await response.json();
-    transcription = data.result;
     setLoadingTranscription(false);
     Set_Show_Download_Transcription_Buttons(true);
+    return data.result;
   } catch (error) {
     alert("Error during transcription: " + error);
     setLoadingTranscription(false);
@@ -57,10 +53,6 @@ export const transcribe = async (file, language_transcription, setLoadingTranscr
 
 export const summarize = async (file, language_summary, setLoadingSummary, Set_Show_Download_Summary_Buttons) => {
   
-    if (!file || !language_summary) {   
-    alert("Missing file or target language for summary.");
-    return;
-  }
   setLoadingSummary(true);
   const baseFileName = file.name.substring(0, file.name.lastIndexOf('.'));
   try {
@@ -68,11 +60,23 @@ export const summarize = async (file, language_summary, setLoadingSummary, Set_S
       `http://localhost:5000/summarize?video_name=${encodeURIComponent(baseFileName)}&language=${language_summary}`
     );
     const data = await response.json();
-    summarization = data.result;
     setLoadingSummary(false);
-    Set_Show_Download_Summary_Buttons(true);    
+    Set_Show_Download_Summary_Buttons(true);  
+    return data.result;  
   } catch (error) {
     alert("Error during summary: " + error);
     setLoadingSummary(false);
+  }
+};
+export const handleSearch = async (keywords) => {
+  try {
+    const response = await fetch(`/search?keywords=${encodeURIComponent(keywords)}`);
+    const data = await response.json();
+    results = data.results;
+    return results;
+  } catch (err) {
+    console.error(err);
+    results = [];
+    return results;
   }
 };
