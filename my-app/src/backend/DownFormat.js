@@ -1,6 +1,5 @@
 import React from 'react';
 import { saveAs } from 'file-saver';
-import { transcription, summarization } from './api';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -16,8 +15,7 @@ pdfMake.fonts = {
 
 
 
-export const handle_Download_Transcription_Txt = () => {
-    alert(transcription);
+export const handle_Download_Transcription_Txt = (transcription) => {
     const blob = new Blob([transcription], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -27,7 +25,7 @@ export const handle_Download_Transcription_Txt = () => {
     URL.revokeObjectURL(url);
   };
 
-export const handle_Download_Transcription_Pdf = (language_transcription) => {
+export const handle_Download_Transcription_Pdf = (language_transcription, transcription) => {
   const alignment = (language_transcription === "he" || language_transcription === "ru") ? "right" : "left";
 
   const docDefinition = {
@@ -48,7 +46,7 @@ export const handle_Download_Transcription_Pdf = (language_transcription) => {
 };
 
 
-export  const handle_Download_Transcription_Word = async () => {
+export  const handle_Download_Transcription_Word = async (transcription) => {
     const doc = new Document({
       sections: [
         {
@@ -66,7 +64,7 @@ export  const handle_Download_Transcription_Word = async () => {
     saveAs(blob, "transcription.docx");
   };
 
-export  const handle_Download_Summary_Txt = () => {
+export  const handle_Download_Summary_Txt = (summarization) => {
     const blob = new Blob([summarization], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -76,7 +74,7 @@ export  const handle_Download_Summary_Txt = () => {
     URL.revokeObjectURL(url); // Clean up
   };
 
-export const handle_Download_Summary_Pdf = (language_summary) => {
+export const handle_Download_Summary_Pdf = (language_summary, summarization) => {
   const alignment = (language_summary === "he" || language_summary === "ru") ? "right" : "left";
 
   const docDefinition = {
@@ -95,7 +93,7 @@ export const handle_Download_Summary_Pdf = (language_summary) => {
 
   pdfMake.createPdf(docDefinition).download(`summarization_${language_summary}.pdf`);
 };
-export  const handle_Download_Summary_Word = async () => {
+export  const handle_Download_Summary_Word = async (summarization) => {
     const doc = new Document({
       sections: [
         {
@@ -112,4 +110,3 @@ export  const handle_Download_Summary_Word = async () => {
     const blob = await Packer.toBlob(doc);
     saveAs(blob, "summarization.docx");
   };
-
