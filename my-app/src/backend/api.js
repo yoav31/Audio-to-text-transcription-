@@ -1,8 +1,4 @@
 
-
-
-export let results= [];
-
 export const handleUpload = async (file, language_input, setLoading,Set_Show_Language_Transcription_Button, Set_Show_Language_Summary_Button) => {
   if (!file) {
     alert("Please select a file first.");
@@ -72,11 +68,34 @@ export const handleSearch = async (keywords) => {
   try {
     const response = await fetch(`/search?keywords=${encodeURIComponent(keywords)}`);
     const data = await response.json();
-    results = data.results;
+    const results = data.results;
     return results;
   } catch (err) {
     console.error(err);
-    results = [];
-    return results;
+    return alert("Error fetching search results."+ err);
+  }
+};
+
+export const TranscribeForSearch = async (videoName) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/transcribe?video_name=${encodeURIComponent(videoName)}&language=${"he"}`
+    );
+    const data = await response.json();
+    return data.result;
+  } catch (error) {
+    alert("Error during transcription: " + error);
+  }
+};
+
+export const SummarizeForSearch = async (videoName) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/summarize?video_name=${encodeURIComponent(videoName)}&language=${"he"}`
+    );
+    const data = await response.json();
+    return data.result;
+  } catch (error) {
+    alert("Error during summary: " + error);
   }
 };
