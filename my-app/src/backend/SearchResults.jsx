@@ -12,6 +12,8 @@ function SearchResults() {
   const [videosNames, setVideosNames] = useState([]);
   const [summaries, setSummaries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [transcriptions, setTranscriptions] = useState([]);
+
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -21,6 +23,8 @@ function SearchResults() {
 
         const summaryList = await Promise.all(names.map(name => SummarizeForSearch(name)));
         setSummaries(summaryList);
+        const transcriptionList = await Promise.all(names.map(name => TranscribeForSearch(name)));
+        setTranscriptions(transcriptionList);
       } catch (error) {
         console.error('Error fetching search results:', error);
       } finally {
@@ -59,7 +63,7 @@ function SearchResults() {
               </Typography>
               <br />
               <Typography variant='body2'>Download Transcription:</Typography>
-              <TranscriptDownloadButton transcription={TranscribeForSearch(name)} />
+              <TranscriptDownloadButton transcription={transcriptions[index]} />
               <Typography variant='body2'>Download Summary:</Typography>
               <SummeryDownloadButton summarization={summaries[index]} />
             </Box>
