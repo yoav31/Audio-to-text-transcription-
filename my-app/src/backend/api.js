@@ -68,8 +68,8 @@ export const handleSearch = async (keywords) => {
   try {
     const response = await fetch(`/search?keywords=${encodeURIComponent(keywords)}`);
     const data = await response.json();
-    const results = data.results;
-    return results;
+    const answer = data.results;
+    return answer;
   } catch (err) {
     console.error(err);
     return alert("Error fetching search results."+ err);
