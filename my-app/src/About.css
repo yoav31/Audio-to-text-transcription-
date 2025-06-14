@@ -1,3 +1,343 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@400;700&display=swap');
+
+/* Historical background with aged paper effect */
+body {
+    background: linear-gradient(135deg, #f4f1e8 0%, #e8dcc6 50%, #d4c4a8 100%);
+    background-attachment: fixed;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 108, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(120, 119, 108, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 119, 108, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Video Background Container */
+.video-background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+    overflow: hidden;
+}
+
+.video-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%) scale(1.1);
+    filter: sepia(40%) contrast(0.8) brightness(0.7) saturate(0.8);
+    opacity: 0.7;
+}
+
+/* Vintage Film Overlay Effects */
+.video-background-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 50% 50%, transparent 20%, rgba(139, 115, 85, 0.05) 21%, rgba(139, 115, 85, 0.05) 25%, transparent 26%),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 2px,
+            rgba(139, 115, 85, 0.02) 2px,
+            rgba(139, 115, 85, 0.02) 3px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            transparent 1px,
+            rgba(139, 115, 85, 0.01) 1px,
+            rgba(139, 115, 85, 0.01) 2px
+        );
+    pointer-events: none;
+    z-index: 1;
+}
+
+.video-background-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 30%,
+        rgba(139, 115, 85, 0.1) 70%,
+        rgba(61, 47, 31, 0.3) 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Animated film dust particles */
+@keyframes filmDust {
+    0% { transform: translateY(100vh) translateX(0px) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) translateX(50px) rotate(360deg); opacity: 0; }
+}
+
+.film-dust {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -5;
+}
+
+.dust-particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(139, 115, 85, 0.3);
+    border-radius: 50%;
+    animation: filmDust 8s linear infinite;
+}
+
+.dust-particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 7s; }
+.dust-particle:nth-child(2) { left: 20%; animation-delay: 1s; animation-duration: 9s; }
+.dust-particle:nth-child(3) { left: 30%; animation-delay: 2s; animation-duration: 6s; }
+.dust-particle:nth-child(4) { left: 40%; animation-delay: 3s; animation-duration: 8s; }
+.dust-particle:nth-child(5) { left: 50%; animation-delay: 4s; animation-duration: 7s; }
+.dust-particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 9s; }
+.dust-particle:nth-child(7) { left: 70%; animation-delay: 6s; animation-duration: 8s; }
+.dust-particle:nth-child(8) { left: 80%; animation-delay: 7s; animation-duration: 6s; }
+.dust-particle:nth-child(9) { left: 90%; animation-delay: 8s; animation-duration: 7s; }
+
+/* Enhanced Historical Container */
+.historical-container {
+    background: linear-gradient(135deg, rgba(248, 243, 230, 0.7), rgba(248, 243, 230, 0.7));
+    border: 3px solid #8b7355;
+    border-radius: 15px;
+    box-shadow: 
+        0 12px 40px rgba(139, 115, 85, 0.4),
+        inset 0 2px 6px rgba(255, 255, 255, 0.6),
+        inset 0 -2px 6px rgba(139, 115, 85, 0.3);
+    margin: 20px;
+    padding: 35px;
+    position: relative;
+    backdrop-filter: blur(12px);
+    z-index: 10;
+    opacity: 0.9;
+}
+
+.historical-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            transparent 2px,
+            rgba(139, 115, 85, 0.02) 2px,
+            rgba(139, 115, 85, 0.02) 4px
+        );
+    opacity: 0.6;
+    pointer-events: none;
+    border-radius: 12px;
+    z-index: -1;
+}
+
+.logo-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 18px 25px;
+    background: linear-gradient(45deg, rgba(139, 115, 85, 0.05), rgba(160, 130, 98, 0.05));
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border: 2px solid rgba(139, 115, 85, 0.2);
+    position: relative;
+    z-index: 2;
+    min-height: 220px;
+    overflow: visible;
+}
+
+.logo-header > :nth-child(1) {
+    justify-self: start;
+}
+
+.logo-header > :nth-child(3) {
+    justify-self: end;
+}
+
+.sce_logo {
+    width: 300px !important;
+    height: 200px !important;
+    filter: sepia(30%) contrast(1.2) brightness(0.9);
+    transition: all 0.3s ease;
+    object-fit: contain;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+.sce_logo:hover {
+    filter: sepia(50%) contrast(1.3) brightness(1.1);
+    transform: scale(1.05);
+}
+
+.museum_logo {
+    width: 200px !important;
+    height: 200px !important;
+    filter: sepia(30%) contrast(1.2) brightness(0.9);
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    box-shadow: 0 6px 12px rgba(139, 115, 85, 0.3);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #f4f1e8 0%, #e8dcc6 50%, #d4c4a8 100%);
+    padding: 10px;
+    border: 3px solid rgba(139, 115, 85, 0.4);
+    z-index: 5;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+.museum_logo:hover {
+    filter: sepia(50%) contrast(1.3) brightness(1.1);
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.logo_text {
+    width: 280px !important;
+    height: 140px !important;
+    transition: all 0.3s ease;
+    object-fit: contain;
+    opacity: 0.8;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+.logo_text:hover {
+    opacity: 1;
+    transform: scale(1.02);
+}
+
+.historical-title {
+    font-family: 'Playfair Display', serif !important;
+    color: #2a1f15 !important;
+    text-shadow: 
+        3px 3px 6px rgba(139, 115, 85, 0.6),
+        1px 1px 3px rgba(255, 255, 255, 0.4),
+        0 0 20px rgba(139, 115, 85, 0.3);
+    margin: 30px 0 !important;
+    font-weight: 700 !important;
+    letter-spacing: 1.2px;
+    line-height: 1.4 !important;
+    position: relative;
+    z-index: 2;
+}
+
+.ornamental-divider {
+    width: 400px;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #8b7355, #a08262, #8b7355, transparent);
+    margin: 25px auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* About Specific Styling */
+.about-content {
+    margin-top: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+.about-section {
+    background: linear-gradient(135deg, rgba(248, 243, 230, 0.8), rgba(232, 220, 198, 0.8));
+    border: 2px solid rgba(139, 115, 85, 0.3);
+    border-radius: 12px;
+    margin-bottom: 25px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.historical-subtitle-heading {
+    font-family: 'Playfair Display', serif !important;
+    color: #3d2f1f !important;
+    font-weight: 600 !important;
+    margin-bottom: 15px !important;
+    text-shadow: 2px 2px 4px rgba(139, 115, 85, 0.3);
+}
+
+.historical-paragraph {
+    font-family: 'Crimson Text', serif !important;
+    color: #3d2f1f !important;
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+    text-shadow: 1px 1px 2px rgba(139, 115, 85, 0.1);
+    margin-bottom: 15px !important;
+}
+
+.contact-info {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(45deg, rgba(139, 115, 85, 0.1), rgba(160, 130, 98, 0.1));
+    border-radius: 10px;
+    border: 1px solid rgba(139, 115, 85, 0.2);
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 10px;
+    background: rgba(248, 243, 230, 0.5);
+    border-radius: 8px;
+    border-left: 4px solid #8b7355;
+}
+
+.contact-item:last-child {
+    margin-bottom: 0;
+}
+
+.contact-name {
+    font-family: 'Playfair Display', serif !important;
+    color: #3d2f1f !important;
+    font-weight: 600 !important;
+    margin-right: 15px !important;
+    text-shadow: 1px 1px 2px rgba(139, 115, 85, 0.2);
+}
+
+.contact-email {
+    font-family: 'Crimson Text', serif !important;
+    color: #8b7355 !important;
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(139, 115, 85, 0.1);
+}
+
 .faq-text {
     margin-left: 20px;
     margin-right: 20px;
