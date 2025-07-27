@@ -9,7 +9,6 @@ from string import punctuation
 nltk.download('punkt_tab')
 nltk.download('stopwords')
 
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
