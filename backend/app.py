@@ -5,8 +5,9 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from moviepy import VideoFileClip
 from pydub import AudioSegment
-from speech import translate, summarize_audio, transcribe_audio
-from db import init_db, add_new_video, get_transcribe, add_transcribe, get_summary, add_summary, search_videos, get_source_lang
+from speech import translate, summarize_audio, transcribe_audio, get_transcribe, get_summary, get_source_lang, add_transcribe, add_summary, add_new_video, search_videos
+from db import *  # You may want to remove this wildcard import if not needed
+from db import init_db
 from download_nltk_data import download_nltk_resources
 import os
 import logging
@@ -99,7 +100,7 @@ def upload_audio():
 
     return jsonify({
         "message": "File processed successfully",
-        "video_name": os.path.basename(filepath),
+        "video_name": filename,
         "language": target_lang,
         "transcribe": transcribe
     }), 200
@@ -182,6 +183,31 @@ def get_all_videos_route():
     except Exception as e:
         logger.error(f"Error getting all videos: {e}")
         return jsonify({"error": "Failed to retrieve videos"}), 500
+
+
+@app.route("/delete", methods=["DELETE"])
+def delete_video_route():
+    """Delete a video from the database"""
+    video_name = request.args.get("video_name")
+    logger.info(f"Delete request for video: {video_name}")
+    
+    if not video_name:
+        logger.error("Delete request without video_name parameter")
+        return jsonify({"error": "Missing video_name parameter"}), 400
+    
+    try:
+        from db import delete_video
+        success = delete_video(video_name)
+        
+        if success:
+            logger.info(f"Successfully deleted video: {video_name}")
+            return jsonify({"message": f"Video '{video_name}' deleted successfully"}), 200
+        else:
+            logger.warning(f"Video not found or could not be deleted: {video_name}")
+            return jsonify({"error": "Video not found or could not be deleted"}), 404
+    except Exception as e:
+        logger.error(f"Error deleting video {video_name}: {e}")
+        return jsonify({"error": "Failed to delete video"}), 500
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
