@@ -11,8 +11,8 @@ DB_CONFIG = {
     'host': os.getenv('MYSQL_HOST', 'localhost'),
     'port': int(os.getenv('MYSQL_PORT', 3306)),
     'user': os.getenv('MYSQL_USER', 'root'),
-    'password': os.getenv('MYSQL_PASSWORD', 'yoav3112000'),
-    'database': os.getenv('MYSQL_DATABASE', 'final_project'),
+    'password': os.getenv('MYSQL_PASSWORD', 'Emil110609'),
+    'database': os.getenv('MYSQL_DATABASE', 'videos.db'),
     'autocommit': True,
 }
 
@@ -187,3 +187,18 @@ def get_all_videos() -> list[str]:
     rows = cur.fetchall()
     conn.close()
     return [row[0] for row in rows]
+
+
+def delete_video(video_name: str) -> bool:
+    """Delete a video from the database."""
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM videos WHERE name = %s", (video_name,))
+        deleted_rows = cur.rowcount
+        conn.close()
+        logger.info(f"Deleted video '{video_name}' from database. Rows affected: {deleted_rows}")
+        return deleted_rows > 0
+    except Exception as e:
+        logger.error(f"Error deleting video '{video_name}': {e}")
+        return False
