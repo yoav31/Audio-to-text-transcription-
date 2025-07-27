@@ -16,6 +16,7 @@ import './Upload.css';
 
 function Upload() {
   const [file, setFile] = useState(null); // State to store the uploaded file
+  const [videoName, setVideoName] = useState(''); // State to store the video name
   const [language_input, setLanguage_input] = useState('');   // State to store the language of the audio/video
   const [language_transcription, setLanguage_transcription] = useState('en'); // State to store the language of the transcription
   const [language_summary, setLanguage_summary] = useState('en'); // State to store the language of the summary
@@ -30,11 +31,15 @@ function Upload() {
   const [Show_Summarize_Button, Set_Show_Summarize_Button] = useState(false); // State to control the visibility of the summary button
   const [transcription, setTranscription] = useState(''); // State to store the transcription text
   const [summarization, setSummarization] = useState(''); // State to store the summary text
+
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
   };
+
   const handleClearFile = () => {
     setFile(null);
+    setVideoName('');
     document.getElementById("file-upload").value = "";
   };
 
@@ -44,11 +49,62 @@ function Upload() {
 
   const handleLanguageTranscriptionChange = (event) => {
     setLanguage_transcription(event.target.value);
-
   };
+
   const handleLanguageSummaryChange = (event) => {
     setLanguage_summary(event.target.value);
+  };
 
+  const handleUploadFile = async () => {
+    if (!file || !language_input) {
+      alert("Please select a file and language first.");
+      return;
+    }
+
+    const uploadedVideoName = await handleUpload(file, language_input, setLoading, Set_Show_Language_Transcription_Button, Set_Show_Language_Summary_Button);
+    if (uploadedVideoName) {
+      setVideoName(uploadedVideoName);
+    }
+  };
+
+  const handleTranscribe = async () => {
+    if (!videoName || !language_transcription) {
+      alert("Missing video name or target language.");
+      return;
+    }
+    
+    setLoadingTranscription(true);
+    
+    try {
+      const transcription = await TranscribeForSearch(videoName, language_transcription);
+      setTranscription(transcription);
+      Set_Show_Download_Transcription_Buttons(true);
+    } catch (error) {
+      console.error('Error during transcription:', error);
+      alert("Error during transcription: " + error);
+    } finally {
+      setLoadingTranscription(false);
+    }
+  };
+
+  const handleSummarize = async () => {
+    if (!videoName || !language_summary) {
+      alert("Missing video name or target language.");
+      return;
+    }
+    
+    setLoadingSummary(true);
+    
+    try {
+      const summarization = await SummarizeForSearch(videoName, language_summary);
+      setSummarization(summarization);
+      Set_Show_Download_Summary_Buttons(true);
+    } catch (error) {
+      console.error('Error during summarization:', error);
+      alert("Error during summarization: " + error);
+    } finally {
+      setLoadingSummary(false);
+    }
   };
 
   // Function to mimic backend's secure_filename() behavior
@@ -59,51 +115,6 @@ function Upload() {
       .replace(/\s+/g, '_') // Replace spaces with underscores
       .replace(/_{2,}/g, '_') // Replace multiple underscores with single
       .trim();
-  };
-
-  const handleTranscribe = async () => {
-    if (!file || !language_transcription) {
-      alert("Missing file or target language.");
-      return;
-    }
-    
-    setLoadingTranscription(true);
-    // Use the same filename processing as the backend: secure_filename(filename).split(".")[0]
-    const securedFilename = secureFilename(file.name);
-    const baseFileName = securedFilename.split(".")[0];
-    
-    try {
-      const transcription = await TranscribeForSearch(baseFileName, language_transcription);
-      setTranscription(transcription);
-      Set_Show_Download_Transcription_Buttons(true);
-    } catch (error) {
-      console.error('Error during transcription:', error);
-      alert("Error during transcription: " + error);
-    } finally {
-      setLoadingTranscription(false);
-    }
-  }
-  const handleSummarize = async () => {
-    if (!file || !language_summary) {
-      alert("Missing file or target language.");
-      return;
-    }
-    
-    setLoadingSummary(true);
-    // Use the same filename processing as the backend: secure_filename(filename).split(".")[0]
-    const securedFilename = secureFilename(file.name);
-    const baseFileName = securedFilename.split(".")[0];
-    
-    try {
-      const summarization = await SummarizeForSearch(baseFileName, language_summary);
-      setSummarization(summarization);
-      Set_Show_Download_Summary_Buttons(true);
-    } catch (error) {
-      console.error('Error during summarization:', error);
-      alert("Error during summarization: " + error);
-    } finally {
-      setLoadingSummary(false);
-    }
   };
 
   const buttonStyle = {
@@ -232,7 +243,7 @@ function Upload() {
             <Button 
               className="upload-button" 
               type="button" 
-              onClick={() => handleUpload(file, language_input, setLoading, Set_Show_Language_Transcription_Button, Set_Show_Language_Summary_Button)} 
+              onClick={handleUploadFile} 
               disabled={loading}
             >
               {loading ? (
@@ -268,7 +279,11 @@ function Upload() {
 
           {Show_Download_Transcription_Buttons && (
             <div className="download-section">
-              <TranscriptDownloadButton transcription={transcription} language={language_transcription} />
+              <TranscriptDownloadButton 
+                transcription={transcription} 
+                language={language_transcription} 
+                videoName={videoName}
+              />
             </div>
           )}
           
@@ -294,7 +309,11 @@ function Upload() {
           
           {Show_Download_Summary_Buttons && (
             <div className="download-section">
-              <SummaryDownloadButton summarization={summarization} language={language_summary} />
+              <SummaryDownloadButton 
+                summarization={summarization} 
+                language={language_summary} 
+                videoName={videoName}
+              />
             </div>
           )}
         </Box>
